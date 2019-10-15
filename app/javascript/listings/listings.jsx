@@ -436,17 +436,13 @@ export class Listings extends Component {
                   Message must be relevant and on-topic with the listing. All
                   private interactions
                   <b>must</b>
-                  abide by the 
-                  {' '}
-                  <a href="/code-of-conduct">code of conduct</a>
+                  abide by the <a href="/code-of-conduct">code of conduct</a>
                 </em>
               ) : (
                 <em>
                   All private interactions
                   <b>must</b>
-                  abide by the 
-                  {' '}
-                  <a href="/code-of-conduct">code of conduct</a>
+                  abide by the <a href="/code-of-conduct">code of conduct</a>
                 </em>
               )}
             </p>

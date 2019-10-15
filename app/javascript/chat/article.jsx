@@ -167,10 +167,15 @@ export default class Article extends Component {
                   src={article.user.profile_image_90}
                   alt={article.user.username}
                 />
-                <span>{article.user.name} </span>
+                <span>
+                  {article.user.name}
+                  {' '}
+                </span>
                 <span className="published-at">
                   {' '}
-                  | {article.readable_publish_date}
+                  | 
+                  {' '}
+                  {article.readable_publish_date}
                 </span>
               </a>
             </h3>

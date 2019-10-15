@@ -101,7 +101,8 @@ export class ListingDashboard extends Component {
       );
     };
 
-    const setStateOnKeyPress = (event, state) => (event.key === 'Enter' || event.key === ' ') && this.setState(state)
+    const setStateOnKeyPress = (event, state) =>
+      (event.key === 'Enter' || event.key === ' ') && this.setState(state);
 
     const filters = ['All', 'Active', 'Draft', 'Expired'];
     const filterButtons = filters.map(f => (
@@ -111,7 +112,9 @@ export class ListingDashboard extends Component {
         }}
         className={`rounded-btn ${filter === f ? 'active' : ''}`}
         role="button"
-        onKeyPress={event => setStateOnKeyPress(event, { filter: event.target.textContent })}
+        onKeyPress={event =>
+          setStateOnKeyPress(event, { filter: event.target.textContent })
+        }
         tabIndex="0"
       >
         {f}
@@ -143,7 +146,9 @@ export class ListingDashboard extends Component {
         className={`rounded-btn ${selectedListings === org.id ? 'active' : ''}`}
         role="button"
         tabIndex="0"
-        onKeyPress={event => setStateOnKeyPress(event, { selectedListings: org.id })}
+        onKeyPress={event =>
+          setStateOnKeyPress(event, { selectedListings: org.id })
+        }
       >
         {org.name}
       </span>
@@ -151,15 +156,10 @@ export class ListingDashboard extends Component {
 
     const listingLength = (selected, userListings, organizationListings) => {
       return selected === 'user' ? (
-        <h4>
-          Listings Made:
-          {' '}
-          {userListings.length}
-        </h4>
+        <h4>Listings Made: {userListings.length}</h4>
       ) : (
         <h4>
-          Listings Made:
-          {' '}
+          Listings Made:{' '}
           {
             organizationListings.filter(
               listing => listing.organization_id === selected,
@@ -171,15 +171,10 @@ export class ListingDashboard extends Component {
 
     const creditCount = (selected, userCreds, organizations) => {
       return selected === 'user' ? (
-        <h4>
-          Credits Available:
-          {' '}
-          {userCreds}
-        </h4>
+        <h4>Credits Available: {userCreds}</h4>
       ) : (
         <h4>
-          Credits Available:
-          {' '}
+          Credits Available:{' '}
           {organizations.find(org => org.id === selected).unspent_credits_count}
         </h4>
       );
@@ -194,7 +189,9 @@ export class ListingDashboard extends Component {
           }`}
           role="button"
           tabIndex="0"
-          onKeyPress={event =>setStateOnKeyPress(event, { selectedListings: 'user' })}
+          onKeyPress={event =>
+            setStateOnKeyPress(event, { selectedListings: 'user' })
+          }
         >
           Personal
         </span>

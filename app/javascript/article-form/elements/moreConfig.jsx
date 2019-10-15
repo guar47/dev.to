@@ -84,11 +84,7 @@ export default class MoreConfig extends Component {
           onKeyUp: onConfigChange,
         })}
         <small>
-          Change meta tag 
-          {' '}
-          <code>canonical_url</code>
-          {' '}
-          if this post was first
+          Change meta tag <code>canonical_url</code> if this post was first
           published elsewhere (like your own blog)
         </small>
         {TextField({

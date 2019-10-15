@@ -129,25 +129,41 @@ class Tags extends Component {
         data-content={tag.name}
       >
         {tag.name}
-        {(tag.rules_html && tag.rules_html.length > 0) ? <button
-          type='button'
-          className={`${this.props.classPrefix}__tagsoptionrulesbutton`}
-          onClick={this.handleRulesClick}
-          data-content={tag.name}
-        >
-        {this.state.showingRulesForTag === tag.name ? 'Hide Rules' : 'View Rules'}
-        </button> : ''}
-        <div className={`${this.props.classPrefix}__tagrules--${this.state.showingRulesForTag === tag.name ? 'active' : 'inactive'}`} dangerouslySetInnerHTML={{ __html: tag.rules_html }} />
+        {tag.rules_html && tag.rules_html.length > 0 ? (
+          <button
+            type="button"
+            className={`${this.props.classPrefix}__tagsoptionrulesbutton`}
+            onClick={this.handleRulesClick}
+            data-content={tag.name}
+          >
+            {this.state.showingRulesForTag === tag.name
+              ? 'Hide Rules'
+              : 'View Rules'}
+          </button>
+        ) : (
+          ''
+        )}
+        <div
+          className={`${this.props.classPrefix}__tagrules--${
+            this.state.showingRulesForTag === tag.name ? 'active' : 'inactive'
+          }`}
+          dangerouslySetInnerHTML={{ __html: tag.rules_html }}
+        />
       </div>
     ));
     if (
       this.state.searchResults.length > 0 &&
-      (document.activeElement.id === 'tag-input' || document.activeElement.className === 'articleform__tagsoptionrulesbutton')
+      (document.activeElement.id === 'tag-input' ||
+        document.activeElement.className ===
+          'articleform__tagsoptionrulesbutton')
     ) {
       searchResultsHTML = (
         <div className={`${this.props.classPrefix}__tagsoptions`}>
           {searchResultsRows}
-          <div className={`${this.props.classPrefix}__tagsoptionsbottomrow`}>Some tags have rules and guidelines determined by community moderators</div>
+          <div className={`${this.props.classPrefix}__tagsoptionsbottomrow`}>
+            Some tags have rules and guidelines determined by community
+            moderators
+          </div>
         </div>
       );
     }
@@ -161,7 +177,7 @@ class Tags extends Component {
           ref={t => (this.textArea = t)}
           className={`${this.props.classPrefix}__tags`}
           placeholder={`${this.props.maxTags} tags max, comma separated, no spaces or special characters`}
-          autoComplete='off'
+          autoComplete="off"
           value={this.props.defaultValue}
           onInput={this.handleInput}
           onKeyDown={this.handleKeyDown}
@@ -176,11 +192,11 @@ class Tags extends Component {
   handleRulesClick = e => {
     e.preventDefault();
     if (this.state.showingRulesForTag === e.target.dataset.content) {
-      this.setState({showingRulesForTag: null});
+      this.setState({ showingRulesForTag: null });
     } else {
-      this.setState({showingRulesForTag: e.target.dataset.content});
+      this.setState({ showingRulesForTag: e.target.dataset.content });
     }
-  }
+  };
 
   handleTagClick = e => {
     if (e.target.className === 'articleform__tagsoptionrulesbutton') {
@@ -285,9 +301,7 @@ class Tags extends Component {
       ) {
         this.clearSelectedSearchResult();
       }
-    } else if (
-      !LETTERS.test(e.key) &&
-      !NAVIGATION_KEYS.includes(e.key)) {
+    } else if (!LETTERS.test(e.key) && !NAVIGATION_KEYS.includes(e.key)) {
       e.preventDefault();
     }
   };
@@ -356,7 +370,8 @@ class Tags extends Component {
     if (query === '') {
       return new Promise(resolve => {
         setTimeout(() => {
-          'search query'
+          'search query';
+
           this.resetSearchResults();
           resolve();
         }, 5);

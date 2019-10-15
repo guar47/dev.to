@@ -21,9 +21,9 @@ import Tags from '../shared/components/tags';
 const setupImageButton = ({ className = '', imgSrc, imgAltText = '', onClickCallback }) => {
   return (
     <button
-    type="button"
-    className={className}
-    onClick={onClickCallback}
+      type="button"
+      className={className}
+      onClick={onClickCallback}
     >
       <img src={imgSrc} alt={imgAltText} />
     </button>

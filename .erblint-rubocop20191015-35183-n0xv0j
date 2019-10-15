@@ -1,0 +1,35 @@
+---
+Metrics/AbcSize:
+  Max: 84
+Metrics/BlockLength:
+  Max: 62
+RSpec/ExampleLength:
+  Exclude:
+  - spec/labor/badge_rewarder_spec.rb
+  - spec/models/comment_spec.rb
+  - spec/models/notification_spec.rb
+  - spec/requests/api/v0/articles_spec.rb
+  - spec/requests/display_ad_events_spec.rb
+RSpec/MultipleExpectations:
+  Max: 8
+Rails/HelperInstanceVariable:
+  Exclude:
+  - app/helpers/application_helper.rb
+Rails/OutputSafety:
+  Exclude:
+  - app/helpers/application_helper.rb
+  - app/helpers/comments_helper.rb
+  - app/labor/markdown_parser.rb
+  - app/liquid_tags/github_tag/github_issue_tag.rb
+  - app/liquid_tags/liquid_tag_base.rb
+  - app/models/comment.rb
+  - app/models/display_ad.rb
+  - app/models/message.rb
+  - app/views/articles/feed.rss.builder
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/GuardClause:
+  Exclude:
+  - app/models/article.rb
+Metrics/LineLength:
+  Max: 380
