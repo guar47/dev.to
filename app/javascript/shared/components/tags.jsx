@@ -2,15 +2,25 @@ import { h, Component } from 'preact';
 import PropTypes from 'prop-types';
 
 const KEYS = {
-  UP: 38,
-  DOWN: 40,
-  LEFT: 37,
-  RIGHT: 39,
-  TAB: 9,
-  RETURN: 13,
-  COMMA: 188,
-  DELETE: 8,
+  UP: 'ArrowUp',
+  DOWN: 'ArrowDown',
+  LEFT: 'ArrowLeft',
+  RIGHT: 'ArrowRight',
+  TAB: 'Tab',
+  RETURN: 'Enter',
+  COMMA: ',',
+  DELETE: 'Backspace',
 };
+
+const NAVIGATION_KEYS = [
+  KEYS.COMMA,
+  KEYS.DELETE,
+  KEYS.LEFT,
+  KEYS.RIGHT,
+  KEYS.TAB,
+];
+
+const LETTERS = /[a-z]/i;
 
 /* TODO: Remove all instances of this.props.listing
    and refactor this component to be more generic */
@@ -25,6 +35,7 @@ class Tags extends Component {
       additionalTags: [],
       cursorIdx: 0,
       prevLen: 0,
+      showingRulesForTag: null,
     };
 
     const algoliaId = document.querySelector("meta[name='algolia-public-id']")
@@ -118,15 +129,25 @@ class Tags extends Component {
         data-content={tag.name}
       >
         {tag.name}
+        {(tag.rules_html && tag.rules_html.length > 0) ? <button
+          type='button'
+          className={`${this.props.classPrefix}__tagsoptionrulesbutton`}
+          onClick={this.handleRulesClick}
+          data-content={tag.name}
+        >
+        {this.state.showingRulesForTag === tag.name ? 'Hide Rules' : 'View Rules'}
+        </button> : ''}
+        <div className={`${this.props.classPrefix}__tagrules--${this.state.showingRulesForTag === tag.name ? 'active' : 'inactive'}`} dangerouslySetInnerHTML={{ __html: tag.rules_html }} />
       </div>
     ));
     if (
       this.state.searchResults.length > 0 &&
-      document.activeElement.id === 'tag-input'
+      (document.activeElement.id === 'tag-input' || document.activeElement.className === 'articleform__tagsoptionrulesbutton')
     ) {
       searchResultsHTML = (
         <div className={`${this.props.classPrefix}__tagsoptions`}>
           {searchResultsRows}
+          <div className={`${this.props.classPrefix}__tagsoptionsbottomrow`}>Some tags have rules and guidelines determined by community moderators</div>
         </div>
       );
     }
@@ -140,7 +161,7 @@ class Tags extends Component {
           ref={t => (this.textArea = t)}
           className={`${this.props.classPrefix}__tags`}
           placeholder={`${this.props.maxTags} tags max, comma separated, no spaces or special characters`}
-          autoComplete={this.props.autoComplete || 'on'}
+          autoComplete='off'
           value={this.props.defaultValue}
           onInput={this.handleInput}
           onKeyDown={this.handleKeyDown}
@@ -152,10 +173,21 @@ class Tags extends Component {
     );
   }
 
+  handleRulesClick = e => {
+    e.preventDefault();
+    if (this.state.showingRulesForTag === e.target.dataset.content) {
+      this.setState({showingRulesForTag: null});
+    } else {
+      this.setState({showingRulesForTag: e.target.dataset.content});
+    }
+  }
+
   handleTagClick = e => {
+    if (e.target.className === 'articleform__tagsoptionrulesbutton') {
+      return;
+    }
     const input = document.getElementById('tag-input');
     input.focus();
-
     this.insertTag(e.target.dataset.content);
   };
 
@@ -189,7 +221,6 @@ class Tags extends Component {
       cursorIdx: e.target.selectionStart,
       prevLen: this.textArea.value.length,
     });
-
     return this.search(query);
   };
 
@@ -218,23 +249,23 @@ class Tags extends Component {
 
     if (
       component.selected.length === this.props.maxTags &&
-      e.keyCode === KEYS.COMMA
+      e.key === KEYS.COMMA
     ) {
       e.preventDefault();
       return;
     }
 
     if (
-      (e.keyCode === KEYS.DOWN || e.keyCode === KEYS.TAB) &&
+      (e.key === KEYS.DOWN || e.key === KEYS.TAB) &&
       !this.isBottomOfSearchResults &&
       component.props.defaultValue !== ''
     ) {
       e.preventDefault();
       this.moveDownInSearchResults();
-    } else if (e.keyCode === KEYS.UP && !this.isTopOfSearchResults) {
+    } else if (e.key === KEYS.UP && !this.isTopOfSearchResults) {
       e.preventDefault();
       this.moveUpInSearchResults();
-    } else if (e.keyCode === KEYS.RETURN && this.isSearchResultSelected) {
+    } else if (e.key === KEYS.RETURN && this.isSearchResultSelected) {
       e.preventDefault();
       this.insertTag(
         component.state.searchResults[component.state.selectedIndex].name,
@@ -243,10 +274,10 @@ class Tags extends Component {
       setTimeout(() => {
         document.getElementById('tag-input').focus();
       }, 10);
-    } else if (e.keyCode === KEYS.COMMA && !this.isSearchResultSelected) {
+    } else if (e.key === KEYS.COMMA && !this.isSearchResultSelected) {
       this.resetSearchResults();
       this.clearSelectedSearchResult();
-    } else if (e.keyCode === KEYS.DELETE) {
+    } else if (e.key === KEYS.DELETE) {
       if (
         component.props.defaultValue[
           component.props.defaultValue.length - 1
@@ -255,13 +286,8 @@ class Tags extends Component {
         this.clearSelectedSearchResult();
       }
     } else if (
-      (e.keyCode < 65 || e.keyCode > 90) &&
-      e.keyCode != KEYS.COMMA &&
-      e.keyCode != KEYS.DELETE &&
-      e.keyCode != KEYS.LEFT &&
-      e.keyCode != KEYS.RIGHT &&
-      e.keyCode != KEYS.TAB
-    ) {
+      !LETTERS.test(e.key) &&
+      !NAVIGATION_KEYS.includes(e.key)) {
       e.preventDefault();
     }
   };
@@ -319,7 +345,7 @@ class Tags extends Component {
         return;
       }
       component.forceUpdate();
-    }, 100);
+    }, 250);
   };
 
   insertSpace(value, position) {
@@ -330,6 +356,7 @@ class Tags extends Component {
     if (query === '') {
       return new Promise(resolve => {
         setTimeout(() => {
+          'search query'
           this.resetSearchResults();
           resolve();
         }, 5);
@@ -338,7 +365,7 @@ class Tags extends Component {
 
     return this.index
       .search(query, {
-        hitsPerPage: 10,
+        hitsPerPage: 8,
         attributesToHighlight: [],
         filters: 'supported:true',
       })
